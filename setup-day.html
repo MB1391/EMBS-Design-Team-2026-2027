@@ -1,0 +1,144 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Design Team Setup Day</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Layout: signal-trace header, team switcher, then one checklist column of numbered setup steps */
+:root{
+  --bg:#F5F5FA; --surface:#FFFFFF; --fg:#1B1A2E; --muted:#62607A; --line:#E2E0EE; --soft:#ECEBF4;
+  --mech:#5B4BB7; --mech-bg:#EFEDFB; --elec:#B5532C; --elec-bg:#FCEFE8; --sw:#A83A63; --sw-bg:#FBEBF1; --bio:#15785C; --bio-bg:#E5F4EE;
+  --ok:#15785C;
+  --display:"Unbounded","Arial Black",system-ui,sans-serif; --body:"Figtree","Segoe UI",system-ui,sans-serif; --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#121120; --surface:#1B1A2C; --fg:#ECEBF7; --muted:#A09DB8; --line:#2E2C44; --soft:#232238;
+  --mech:#A89CF5; --mech-bg:#26214A; --elec:#F09A72; --elec-bg:#3A2319; --sw:#EE8CB2; --sw-bg:#3A1C29; --bio:#5FD1A8; --bio-bg:#12332A; --ok:#5FD1A8; color-scheme:dark }}
+:root[data-theme="dark"]{
+  --bg:#121120; --surface:#1B1A2C; --fg:#ECEBF7; --muted:#A09DB8; --line:#2E2C44; --soft:#232238;
+  --mech:#A89CF5; --mech-bg:#26214A; --elec:#F09A72; --elec-bg:#3A2319; --sw:#EE8CB2; --sw-bg:#3A1C29; --bio:#5FD1A8; --bio-bg:#12332A; --ok:#5FD1A8; color-scheme:dark }
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:15px;line-height:1.55}
+.wrap{max-width:860px;margin:0 auto;padding-inline:clamp(16px,3vw,32px);padding-block:32px 64px;display:flex;flex-direction:column;gap:24px}
+.eyebrow{font:500 12px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+h1{font-family:var(--display);font-weight:700;font-size:clamp(28px,5vw,44px);line-height:1.05;margin:6px 0 0;text-wrap:balance}
+.lede{color:var(--muted);margin:0;max-width:62ch}
+.trace{width:100%;height:48px;display:block}
+.trace path{fill:none;stroke-width:2;stroke-linejoin:round}
+.bring{display:flex;flex-wrap:wrap;gap:8px}
+.bring span{font-size:13px;background:var(--soft);padding:4px 10px;border-radius:999px}
+.teams{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.team{font:600 14px var(--body);border:1.5px solid var(--c);color:var(--c);background:transparent;border-radius:12px;padding:10px 12px;cursor:pointer;text-align:left;display:flex;flex-direction:column;gap:2px}
+.team small{font:500 11px var(--mono);letter-spacing:.06em;color:var(--muted);text-transform:uppercase}
+.team[aria-pressed="true"]{background:var(--cbg);box-shadow:inset 0 0 0 1.5px var(--c)}
+button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(--fg);outline-offset:2px}
+@media (max-width:560px){.teams{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.bar{display:flex;align-items:center;gap:12px}
+.bar .track{flex:1;height:8px;border-radius:999px;background:var(--soft);overflow:hidden}
+.bar .fill{height:100%;background:var(--c);width:0;transition:width .3s}
+.bar .num{font:500 12px var(--mono);color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+ol.steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px;counter-reset:s}
+.step{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--c);border-radius:12px;padding:16px 18px;display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 14px;counter-increment:s}
+.step.done{opacity:.6}
+.step .n{font-family:var(--display);font-size:20px;color:var(--c);line-height:1.2}
+.step .n::before{content:counter(s)}
+.step h3{margin:0;font-size:16px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.step .tag{font:500 10.5px var(--mono);letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:999px;background:var(--cbg);color:var(--c)}
+.body{grid-column:2;display:flex;flex-direction:column;gap:8px;min-width:0}
+.body ol{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:3px}
+.body a{color:var(--c);font-weight:600}
+.check{display:flex;gap:8px;align-items:center;font-size:14px;font-weight:600;cursor:pointer;margin-top:4px}
+.check input{width:18px;height:18px;accent-color:var(--ok)}
+.tip{font-size:13px;color:var(--muted);background:var(--soft);border-radius:8px;padding:8px 10px}
+.copy{display:flex;gap:8px;align-items:center;flex-wrap:wrap;background:var(--soft);border-radius:8px;padding:8px 10px}
+.copy code{font:500 12.5px var(--mono);word-break:break-all;flex:1;min-width:0}
+.copy button{font:600 12px var(--body);border:1px solid var(--line);background:var(--surface);color:var(--fg);border-radius:6px;padding:4px 10px;cursor:pointer}
+kbd{font:500 12px var(--mono);background:var(--soft);border:1px solid var(--line);border-radius:4px;padding:0 4px}
+footer{color:var(--muted);font-size:13px}
+</style>
+
+<div class="wrap">
+<header>
+  <div class="eyebrow">EMBS Design Team · Meeting 1 · Oct 7</div>
+  <h1>Setup Day</h1>
+</header>
+<svg class="trace" viewBox="0 0 800 48" preserveAspectRatio="none" aria-hidden="true"><path id="tr"/></svg>
+<p class="lede">Pick your subteam below and work through each step. Check them off as you go. When every box is checked, you're ready for the rest of the semester.</p>
+<div class="bring"><span>💻 Laptop you can install software on</span><span>🔌 Charger</span><span>📧 UF email login</span></div>
+
+<div class="teams" role="group" aria-label="Choose your subteam" id="teams"></div>
+
+<div class="bar"><div class="track"><div class="fill" id="fill"></div></div><span class="num" id="num"></span></div>
+<ol class="steps" id="steps"></ol>
+
+<footer>Stuck on a step? Flag down a team lead. Most problems are a missing driver or the wrong board selected.</footer>
+</div>
+
+<script>
+const ESP_URL="https://espressif.github.io/arduino-esp32/package_esp32_index.json";
+const S={
+onshape:{t:"Onshape",tag:"Account",b:`<ol>
+<li>Go to <a href="https://www.onshape.com/en/education/sign-up" target="_blank" rel="noopener">onshape.com/en/education/sign-up</a>.</li>
+<li>Choose the free <b>Student</b> plan and sign up with your UF email.</li>
+<li>Verify your email, then log in at <a href="https://cad.onshape.com" target="_blank" rel="noopener">cad.onshape.com</a>. It runs in your browser, so there is nothing to install.</li>
+<li>Send your Onshape email to a team lead so we can share the team documents with you.</li></ol>`},
+tinkercad:{t:"TinkerCad",tag:"Account",b:`<ol>
+<li>Go to <a href="https://www.tinkercad.com" target="_blank" rel="noopener">tinkercad.com</a> and click <b>Sign Up</b>.</li>
+<li>Create a personal account with your UF email.</li>
+<li>Open <b>Circuits</b> from the left menu and create a new blank circuit to make sure it loads.</li></ol>`},
+kicad:{t:"KiCad",tag:"Install",b:`<ol>
+<li>Go to <a href="https://www.kicad.org/download/" target="_blank" rel="noopener">kicad.org/download</a> and pick your operating system.</li>
+<li>Download the latest stable version and run the installer with the default options.</li>
+<li>Open KiCad once and create a new project called <b>test</b> to confirm it works.</li></ol>
+<div class="tip">This is a large download. Start it first, then do the other steps while it installs.</div>`},
+github:{t:"GitHub",tag:"Account",b:`<ol>
+<li>Go to <a href="https://github.com/signup" target="_blank" rel="noopener">github.com/signup</a> and create an account. Pick a professional username, since it can go on your resume.</li>
+<li>Verify your email.</li>
+<li>Send your GitHub username to a team lead so we can add you to the team repository.</li></ol>
+<div class="tip">Optional: add your UF email to your account and apply for the free <a href="https://education.github.com/pack" target="_blank" rel="noopener">GitHub Student Developer Pack</a>.</div>`},
+vscode:{t:"VS Code",tag:"Install",b:`<ol>
+<li>Go to <a href="https://code.visualstudio.com" target="_blank" rel="noopener">code.visualstudio.com</a> and download it for your operating system.</li>
+<li>Run the installer with the default options.</li>
+<li>Open VS Code, go to the Extensions tab, and install <b>C/C++</b> by Microsoft.</li></ol>`},
+arduino:{t:"Arduino IDE with ESP32 support",tag:"Install",b:`<ol>
+<li>Download the Arduino IDE from <a href="https://www.arduino.cc/en/software" target="_blank" rel="noopener">arduino.cc/en/software</a> and install it.</li>
+<li>Open <b>File &gt; Preferences</b> (on Mac: <b>Arduino IDE &gt; Settings</b>).</li>
+<li>Paste this link into <b>Additional boards manager URLs</b>:</li></ol>
+<div class="copy"><code>${ESP_URL}</code><button type="button" data-copy="${ESP_URL}">Copy</button></div>
+<ol start="4">
+<li>Open <b>Tools &gt; Board &gt; Boards Manager</b>, search <b>esp32</b>, and install <b>esp32 by Espressif Systems</b>.</li>
+<li>Go to <b>Tools &gt; Board</b> and select <b>ESP32 Dev Module</b>.</li></ol>
+<div class="tip">Testing with a board? Plug it in with a data USB cable and pick it under <b>Tools &gt; Port</b>. If no port shows up, you probably need the USB driver for your board's chip (usually CP210x or CH340), or a different cable.</div>`},
+mood:{t:"Robot mood board",tag:"Deliverable",b:`<ol>
+<li>Find two or three images of robots, characters, or colors you'd want our robot to feel like.</li>
+<li>Add them to the team mood board your leads share today, with one line on why you picked each.</li></ol>`}
+};
+const TEAMS=[
+ {k:"Mechanical",c:"--mech",bg:"--mech-bg",steps:["onshape","mood"]},
+ {k:"Electrical",c:"--elec",bg:"--elec-bg",steps:["kicad","tinkercad","arduino","mood"]},
+ {k:"Software",c:"--sw",bg:"--sw-bg",steps:["github","vscode","arduino","mood"]},
+ {k:"Biomedical",c:"--bio",bg:"--bio-bg",steps:["onshape","github","arduino","mood"]}
+];
+let cur="Mechanical", done={};
+try{const s=JSON.parse(localStorage.getItem("embs-setup")||"null"); if(s){cur=s.cur||cur; done=s.done||{};}}catch(e){}
+if(/^#(Mechanical|Electrical|Software|Biomedical)$/.test(location.hash)) cur=location.hash.slice(1);
+const save=()=>{try{localStorage.setItem("embs-setup",JSON.stringify({cur,done}))}catch(e){}};
+function trace(){let d="M0 24",x=0;[[90,.5],[80,10],[70,.5],[100,16],[60,.5],[90,8],[80,.5],[130,14],[100,.5]].forEach(([l,a])=>{for(let i=0;i<l;i+=5){x+=5;d+=` L${x} ${(24+(Math.sin(x*.9)+Math.sin(x*2.3))*a*(Math.random()*.9+.2)*.5).toFixed(1)}`}});
+ const p=document.getElementById("tr");p.setAttribute("d",d);p.style.stroke="url(#g)";
+ p.ownerSVGElement.insertAdjacentHTML("afterbegin",`<defs><linearGradient id="g" x1="0" x2="1">${["--mech","--elec","--sw","--bio"].map((c,i)=>`<stop offset="${i/3}" stop-color="var(${c})"/>`).join("")}</linearGradient></defs>`);}
+function render(){
+ const T=TEAMS.find(t=>t.k===cur);
+ document.getElementById("teams").innerHTML=TEAMS.map(t=>`<button class="team" id="team-${t.k}" data-k="${t.k}" style="--c:var(${t.c});--cbg:var(${t.bg})" aria-pressed="${t.k===cur}">${t.k}<small>${t.steps.length} steps</small></button>`).join("");
+ document.querySelectorAll(".team").forEach(b=>b.onclick=()=>{cur=b.dataset.k;save();render();});
+ const root=document.querySelector(".wrap"); root.style.setProperty("--c",`var(${T.c})`); root.style.setProperty("--cbg",`var(${T.bg})`);
+ const d=done[cur]||{};
+ document.getElementById("steps").innerHTML=T.steps.map(id=>{const s=S[id],on=!!d[id];return `<li class="step${on?" done":""}"><span class="n"></span><h3>${s.t}<span class="tag">${s.tag}</span></h3><div class="body">${s.b}<label class="check"><input type="checkbox" id="chk-${cur}-${id}" data-id="${id}" ${on?"checked":""}> Done</label></div></li>`}).join("");
+ document.querySelectorAll(".check input").forEach(i=>i.onchange=()=>{done[cur]=done[cur]||{};done[cur][i.dataset.id]=i.checked;save();render();});
+ document.querySelectorAll("[data-copy]").forEach(b=>b.onclick=()=>{const txt=b.dataset.copy;const ok=()=>{b.textContent="Copied";setTimeout(()=>b.textContent="Copy",1500)};
+   (navigator.clipboard?navigator.clipboard.writeText(txt):Promise.reject()).then(ok).catch(()=>{const r=document.createRange();r.selectNodeContents(b.previousElementSibling);const sel=getSelection();sel.removeAllRanges();sel.addRange(r);b.textContent="Selected, press Ctrl+C";});});
+ const n=T.steps.filter(id=>d[id]).length;
+ document.getElementById("fill").style.width=(100*n/T.steps.length)+"%";
+ document.getElementById("num").textContent=n===T.steps.length?"All set ✓":`${n} of ${T.steps.length} done`;
+}
+trace();render();
+</script>
+
+</body></html>
