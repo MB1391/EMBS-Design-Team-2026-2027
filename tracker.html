@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Weekly Tasks · EMBS Design Team</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+:root{
+  --bg:#F5F5FA; --surface:#FFFFFF; --fg:#1B1A2E; --muted:#62607A; --line:#E2E0EE; --soft:#ECEBF4;
+  --mech:#5B4BB7; --mech-bg:#EFEDFB; --elec:#B5532C; --elec-bg:#FCEFE8; --sw:#A83A63; --sw-bg:#FBEBF1; --bio:#15785C; --bio-bg:#E5F4EE;
+  --rose:#B0476F; --rose-bg:#FBE4EC; --rose-bg2:#F6D3E0; --gold:#B8860B; --gold-bg:#FFF5D6; --ok:#15785C;
+  --display:"Unbounded","Arial Black",system-ui,sans-serif; --body:"Figtree","Segoe UI",system-ui,sans-serif; --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){:root{
+  --bg:#121120; --surface:#1B1A2C; --fg:#ECEBF7; --muted:#A09DB8; --line:#2E2C44; --soft:#232238;
+  --mech:#A89CF5; --mech-bg:#26214A; --elec:#F09A72; --elec-bg:#3A2319; --sw:#EE8CB2; --sw-bg:#3A1C29; --bio:#5FD1A8; --bio-bg:#12332A;
+  --rose:#F29BBC; --rose-bg:#3A1A27; --rose-bg2:#4A2233; --gold:#F2C75C; --gold-bg:#3A3016; --ok:#5FD1A8; color-scheme:dark }}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--body);font-size:15px;line-height:1.55}
+.wrap{max-width:760px;margin:0 auto;padding-inline:clamp(16px,4vw,32px);padding-block:28px 64px;display:flex;flex-direction:column;gap:20px}
+.eyebrow{font:500 12px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+h1{font-family:var(--display);font-weight:700;font-size:clamp(28px,6vw,42px);line-height:1.05;margin:6px 0 0}
+.teams{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+@media (max-width:560px){.teams{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.team{font:600 14px var(--body);border:1.5px solid var(--c);color:var(--c);background:transparent;border-radius:12px;padding:10px 12px;cursor:pointer;text-align:left}
+.team[aria-pressed="true"]{background:var(--cbg);box-shadow:inset 0 0 0 1.5px var(--c)}
+button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--fg);outline-offset:2px}
+.nav{display:flex;align-items:center;gap:8px}
+.nav button{font:600 18px var(--body);width:40px;height:40px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--fg);cursor:pointer}
+.nav button:disabled{opacity:.35;cursor:default}
+.nav select{flex:1;min-width:0;height:40px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--fg);font:600 14px var(--body);padding:0 10px}
+.card{background:var(--surface);border:1px solid var(--line);border-top:4px solid var(--c);border-radius:14px;padding:18px 20px;display:flex;flex-direction:column;gap:14px}
+.when{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:baseline}
+.when .date{font-family:var(--display);font-weight:500;font-size:22px}
+.when .wk{font:500 12px var(--mono);color:var(--muted);letter-spacing:.06em}
+.pill{font:500 11px var(--mono);letter-spacing:.06em;padding:3px 8px;border-radius:999px;background:var(--soft)}
+.pill.now{background:var(--gold-bg);color:var(--gold)}
+.pill.lab{background:var(--cbg);color:var(--c)}
+h2{margin:0;font-size:19px;line-height:1.3}
+.bar{display:flex;align-items:center;gap:12px}
+.track{flex:1;height:8px;border-radius:999px;background:var(--soft);overflow:hidden}
+.fill{height:100%;background:var(--c);width:0;transition:width .3s}
+.num{font:500 12px var(--mono);color:var(--muted);white-space:nowrap}
+ul.tasks{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.task label{display:flex;gap:12px;align-items:flex-start;padding:10px 12px;border-radius:10px;background:var(--cbg);cursor:pointer}
+.task input{width:20px;height:20px;margin-top:1px;flex:none;accent-color:var(--ok)}
+.task.done span{text-decoration:line-through;color:var(--muted)}
+.task.deliv label{background:transparent;border:1.5px dashed var(--c)}
+.task.deliv b{display:block;font:500 10.5px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--c)}
+.banner{border-radius:14px;padding:22px 20px;font-weight:600}
+.banner.off{background:repeating-linear-gradient(135deg,var(--rose-bg) 0 10px,var(--rose-bg2) 10px 20px);color:var(--rose)}
+.banner.show{background:var(--gold-bg);color:var(--fg);border:1.5px solid var(--gold)}
+.banner.show strong{font-family:var(--display);color:var(--gold);font-size:22px;display:block}
+.banner.buf{background:var(--soft);color:var(--muted)}
+.err{background:var(--rose-bg);color:var(--rose);border-radius:12px;padding:14px 16px}
+footer{color:var(--muted);font-size:13px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">EMBS Design Team · 2026 to 2027</div>
+    <h1>Weekly Tasks</h1>
+  </header>
+  <div class="teams" role="group" aria-label="Choose your subteam" id="teams"></div>
+  <div class="nav">
+    <button type="button" id="prev" aria-label="Previous week">‹</button>
+    <select id="week" aria-label="Choose a week"></select>
+    <button type="button" id="next" aria-label="Next week">›</button>
+  </div>
+  <main id="main"></main>
+  <footer>Your checkmarks save on this device only. The list opens on the next meeting automatically.</footer>
+</div>
+<script>
+const COLORS={Mechanical:["--mech","--mech-bg"],Electrical:["--elec","--elec-bg"],Software:["--sw","--sw-bg"],Biomedical:["--bio","--bio-bg"]};
+const MON={Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:8,Oct:9,Nov:10,Dec:11};
+const store={get(k,d){try{const v=localStorage.getItem(k);return v===null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+const esc=s=>String(s).replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]));
+let DATA, WEEKS=[], team, idx, nextIdx;
+
+function flatten(){
+  WEEKS=[];
+  for(const s of DATA.semesters) for(const w of s.weeks){
+    const [m,d]=w.date.split(" ");
+    WEEKS.push({...w,sem:s,key:s.id+"-"+w.n,when:new Date(s.year,MON[m],+d)});
+  }
+  const today=new Date();today.setHours(0,0,0,0);
+  nextIdx=WEEKS.findIndex(w=>w.when>=today&&!w.off);
+  if(nextIdx<0) nextIdx=WEEKS.length-1;
+}
+function setupControls(){
+  const names=DATA.teams.map(t=>t.name);
+  team=store.get("embs-tasks-team",names[0]);
+  const h=decodeURIComponent(location.hash.slice(1));
+  if(names.includes(h)){team=h;store.set("embs-tasks-team",team)}
+  if(!names.includes(team)) team=names[0];
+  window.addEventListener("hashchange",()=>{const k=decodeURIComponent(location.hash.slice(1));if(names.includes(k)){team=k;store.set("embs-tasks-team",team);render()}});
+  idx=nextIdx;
+  const sel=document.getElementById("week");
+  sel.innerHTML=DATA.semesters.map(s=>`<optgroup label="${esc(s.name)}">`+WEEKS.map((w,i)=>w.sem===s?`<option value="${i}">Week ${esc(w.n)} · ${esc(w.date)}${w.off?" · No meeting":""}${i===nextIdx?" · Up next":""}</option>`:"").join("")+`</optgroup>`).join("");
+  sel.onchange=()=>{idx=+sel.value;render()};
+  document.getElementById("prev").onclick=()=>{if(idx>0){idx--;render()}};
+  document.getElementById("next").onclick=()=>{if(idx<WEEKS.length-1){idx++;render()}};
+}
+function render(){
+  const [c,bg]=COLORS[team]||["--mech","--mech-bg"];
+  const root=document.querySelector(".wrap");
+  root.style.setProperty("--c",`var(${c})`);root.style.setProperty("--cbg",`var(${bg})`);
+  document.getElementById("teams").innerHTML=DATA.teams.map(t=>{const [tc,tb]=COLORS[t.name]||["--mech","--mech-bg"];return `<button type="button" class="team" id="team-${esc(t.name)}" data-k="${esc(t.name)}" style="--c:var(${tc});--cbg:var(${tb})" aria-pressed="${t.name===team}">${esc(t.name)}</button>`}).join("");
+  document.querySelectorAll(".team").forEach(b=>b.onclick=()=>{team=b.dataset.k;store.set("embs-tasks-team",team);render()});
+  document.getElementById("week").value=idx;
+  document.getElementById("prev").disabled=idx===0;
+  document.getElementById("next").disabled=idx===WEEKS.length-1;
+  const w=WEEKS[idx], main=document.getElementById("main");
+  const head=`<div class="when"><span class="date">${esc(w.date)}</span><span class="wk">${esc(w.sem.name.toUpperCase())} · WEEK ${esc(w.n)}</span>${idx===nextIdx?'<span class="pill now">Up next</span>':""}</div>`;
+  if(w.off){main.innerHTML=`<div class="banner off">No meeting · ${esc(w.off)}</div>`;return}
+  if(w.all==="show"){main.innerHTML=`<div class="banner show"><strong>Showcase</strong>All subteams present the finished robot 🎉</div>`;return}
+  if(w.all==="buffer"){main.innerHTML=`<div class="banner buf">Buffer week · Catch up on anything that slipped before classes end</div>`;return}
+  const t=w.teams&&w.teams[team];
+  if(!t){main.innerHTML=`<div class="card">${head}<p>No tasks listed for ${esc(team)} this week.</p></div>`;return}
+  const items=t.items.map((x,i)=>({id:"t"+i,text:x}));
+  if(t.deliv) items.push({id:"d",text:t.deliv,deliv:true});
+  const key=`embs-tasks-${team}-${w.key}`, done=store.get(key,{});
+  const n=items.filter(i=>done[i.id]).length;
+  main.innerHTML=`<div class="card">${head}
+    <h2>${esc(t.title)} ${t.lab?'<span class="pill lab">🔬 Lab</span>':""}</h2>
+    <div class="bar"><div class="track"><div class="fill" style="width:${100*n/items.length}%"></div></div><span class="num">${n===items.length?"All done ✓":n+" of "+items.length}</span></div>
+    <ul class="tasks">${items.map(i=>`<li class="task${i.deliv?" deliv":""}${done[i.id]?" done":""}"><label><input type="checkbox" id="chk-${i.id}" data-id="${i.id}" ${done[i.id]?"checked":""}><span>${i.deliv?"<b>Deliverable</b>":""}${esc(i.text)}</span></label></li>`).join("")}</ul></div>`;
+  main.querySelectorAll("input").forEach(el=>el.onchange=()=>{done[el.dataset.id]=el.checked;store.set(key,done);render()});
+}
+fetch("schedule.json",{cache:"no-cache"}).then(r=>{if(!r.ok)throw new Error(r.status);return r.json()})
+ .then(d=>{DATA=d;flatten();setupControls();render()})
+ .catch(()=>{document.getElementById("main").innerHTML='<div class="err">The schedule couldn\'t load. Make sure schedule.json is uploaded in the same folder as this page, then refresh.</div>'});
+</script>
+</body>
+</html>

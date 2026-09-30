@@ -1,0 +1,800 @@
+{
+  "_readme": "Edit this file to change the schedule. Each week has a number, a Wednesday date, and either tasks per team, an 'off' reason for no meeting, or 'all' for Showcase or Buffer weeks.",
+  "teams": [
+    {
+      "name": "Mechanical"
+    },
+    {
+      "name": "Electrical"
+    },
+    {
+      "name": "Software"
+    },
+    {
+      "name": "Biomedical"
+    }
+  ],
+  "semesters": [
+    {
+      "id": "fall",
+      "name": "Fall 2026",
+      "year": 2026,
+      "theme": "Fundamentals and independent design",
+      "weeks": [
+        {
+          "n": "1",
+          "date": "Oct 7",
+          "teams": {
+            "Mechanical": {
+              "title": "Kickoff and Account Setup",
+              "items": [
+                "Pick roles and decide the robot's look and personality as a team",
+                "Set up the accounts and software this subteam uses: Onshape"
+              ],
+              "deliv": "Robot mood board and every member's Onshape account",
+              "lab": false
+            },
+            "Electrical": {
+              "title": "Kickoff and Account Setup",
+              "items": [
+                "Pick roles and decide the robot's look and personality as a team",
+                "Set up the accounts and software this subteam uses: TinkerCad, KiCad, and the Arduino IDE with ESP32 board support"
+              ],
+              "deliv": "Robot mood board, a TinkerCad account for every member, and KiCad and Arduino IDE installed on every laptop",
+              "lab": false
+            },
+            "Software": {
+              "title": "Kickoff and Account Setup",
+              "items": [
+                "Pick roles and decide the robot's look and personality as a team",
+                "Set up the accounts and software this subteam uses: GitHub, VS Code, and the Arduino IDE with ESP32 board support"
+              ],
+              "deliv": "Robot mood board, a GitHub account for every member, and VS Code and Arduino IDE installed on every laptop",
+              "lab": false
+            },
+            "Biomedical": {
+              "title": "Kickoff and Account Setup",
+              "items": [
+                "Pick roles and decide the robot's look and personality as a team",
+                "Set up the accounts and software this subteam uses: Onshape, GitHub, and the Arduino IDE with ESP32 board support"
+              ],
+              "deliv": "Robot mood board, Onshape and GitHub accounts for every member, and Arduino IDE installed on every laptop",
+              "lab": false
+            }
+          }
+        },
+        {
+          "n": "2",
+          "date": "Oct 14",
+          "teams": {
+            "Mechanical": {
+              "title": "Concept Design and Cardboard Prototypes",
+              "items": [
+                "Whole subteam sketches the body and arm at 6 to 7 inches tall",
+                "Body Pair builds a cardboard body to check size, proportions, and component space",
+                "Arm Pair builds a cardboard arm and claw with string to test routing, claw motion, and elbow bend"
+              ],
+              "deliv": "Concept sketch, cardboard body, and working cardboard arm",
+              "lab": false
+            },
+            "Electrical": {
+              "title": "Electrical Concept Design and Parts Selection",
+              "items": [
+                "Map the full signal chain as a block diagram, from electrodes to the ESP32 and from the battery to every part",
+                "Learn to read a datasheet using the real parts",
+                "Finalize the parts order list",
+                "Circuit basics are covered at the breadboarding workshop this week"
+              ],
+              "deliv": "Block diagram and parts order list",
+              "lab": false
+            },
+            "Software": {
+              "title": "Software Concept Design",
+              "items": [
+                "Map how the robot \"thinks\" as a flowchart: idle, correct muscle, wrong muscle, and both at once",
+                "Work with the team to list every face expression the robot needs"
+              ],
+              "deliv": "Software flowchart and face expression list",
+              "lab": false
+            },
+            "Biomedical": {
+              "title": "Cuff Concept Design",
+              "items": [
+                "Sketch cuff designs and build a quick cardboard and fabric mockup",
+                "Decide which cuff parts will be 3D printed, like electrode holders and the board housing"
+              ],
+              "deliv": "Cuff concept sketch and mockup",
+              "lab": false
+            }
+          }
+        },
+        {
+          "n": "3",
+          "date": "Oct 21",
+          "teams": {
+            "Mechanical": {
+              "title": "Onshape Training Part 1",
+              "items": [
+                "Guided training on sketches, constraints, and extrudes"
+              ],
+              "deliv": "Completed training exercises",
+              "lab": false
+            },
+            "Electrical": {
+              "title": "Op Amps",
+              "items": [
+                "Quick TinkerCad demo, then build a non inverting amplifier with the TL272 and check the gain with a multimeter",
+                "Build an op amp comparator that turns on an LED past a set voltage"
+              ],
+              "deliv": "Working amplifier and comparator LED circuit",
+              "lab": false
+            },
+            "Software": {
+              "title": "Arduino C++ Basics",
+              "items": [
+                "Learn variables, if statements, loops, and functions by building",
+                "Read a potentiometer, graph it on the Serial Plotter, and use it to control an LED's brightness"
+              ],
+              "deliv": "Potentiometer controlled LED",
+              "lab": false
+            },
+            "Biomedical": {
+              "title": "Onshape Training",
+              "items": [
+                "Join Mechanical for guided training on sketches, constraints, and extrudes"
+              ],
+              "deliv": "Completed training exercises",
+              "lab": false
+            }
+          }
+        },
+        {
+          "n": "4",
+          "date": "Oct 28",
+          "teams": {
+            "Mechanical": {
+              "title": "Onshape Training Part 2",
+              "items": [
+                "Guided training on assemblies and mates",
+                "Measure real components (servos, ESP32, OLED, battery) and model them as simple blocks"
+              ],
+              "deliv": "Component reference models",
+              "lab": false
+            },
+            "Electrical": {
+              "title": "Filters",
+              "items": [
+                "Build RC low pass and high pass filters on a breadboard",
+                "Use an ESP32 and the Arduino Serial Plotter as a simple oscilloscope to see a signal before and after filtering"
+              ],
+              "deliv": "Working filters with plotted before and after signals",
+              "lab": false
+            },
+            "Software": {
+              "title": "Servos and the OLED",
+              "items": [
+                "Controls Pair makes a servo sweep, then controls a servo with a potentiometer",
+                "Wireless Pair gets the OLED displaying text and simple shapes"
+              ],
+              "deliv": "Potentiometer controlled servo and working OLED",
+              "lab": false
+            },
+            "Biomedical": {
+              "title": "Forearm Anatomy and Muscle Mapping",
+              "items": [
+                "Learn the forearm flexors and extensors, then find them on each other by feel",
+                "Mark candidate electrode sites"
+              ],
+              "deliv": "Muscle map with candidate sites",
+              "lab": false
+            }
+          }
+        },
+        {
+          "n": "5",
+          "date": "Nov 4",
+          "teams": {
+            "Mechanical": {
+              "title": "v1 CAD and First Prints",
+              "items": [
+                "Arm Pair CADs the arm, elbow joint, servo mounts, and claw, and finalizes string tension and pull distance",
+                "Body Pair CADs the body with space for the battery, ESP32, servos, OLED window, and LED holes, plus servo brackets and board standoffs",
+                "Leads send both to the Makerspace after the meeting"
+              ],
+              "deliv": "Arm, claw, and body v1 CAD models in the print queue",
+              "lab": false
+            },
+            "Electrical": {
+              "title": "First Build",
+              "items": [
+                "Cuff Pair builds the instrumentation amplifier and bandpass filter for channel 1 and views the output on the Serial Plotter",
+                "Robot Pair works through the schematic section of a KiCad course, then designs the robot power system (battery, charging module, voltage regulator)"
+              ],
+              "deliv": "Channel 1 front end and robot power schematic",
+              "lab": true
+            },
+            "Software": {
+              "title": "Faces and Wireless Basics",
+              "items": [
+                "Controls Pair draws the happy, confused, and idle faces on the OLED",
+                "Wireless Pair sends a simple message between two ESP32s over Bluetooth"
+              ],
+              "deliv": "Three face expressions and a working ESP32 to ESP32 link",
+              "lab": false
+            },
+            "Biomedical": {
+              "title": "Electrodes and Calibration Concepts",
+              "items": [
+                "Biosignal Pair learns electrode types, spacing, reference placement, and skin prep, then practices placement",
+                "Calibration Pair learns resting signals, maximum flex, and thresholds, then drafts the calibration steps"
+              ],
+              "deliv": "Draft electrode placement and calibration protocols",
+              "lab": true
+            }
+          }
+        },
+        {
+          "n": "6",
+          "date": "Nov 11",
+          "off": "No school (Veterans Day)"
+        },
+        {
+          "n": "7",
+          "date": "Nov 18",
+          "teams": {
+            "Mechanical": {
+              "title": "Prototype Testing",
+              "items": [
+                "Arm Pair tests elbow range of motion and claw open and close with a servo sweep",
+                "Body Pair checks body fit with the component reference models",
+                "Write the spring fix list"
+              ],
+              "deliv": "Tested prototypes and a spring fix list",
+              "lab": false
+            },
+            "Electrical": {
+              "title": "Signal Chain and Power Build",
+              "items": [
+                "Cuff Pair adds the rectifier, envelope detector, and comparator, then tests on a forearm with Biomedical",
+                "Robot Pair builds and tests the power system on a breadboard"
+              ],
+              "deliv": "Working channel 1 signal and verified robot voltages",
+              "lab": true
+            },
+            "Software": {
+              "title": "Fake Muscles and End to End Demo",
+              "items": [
+                "Wireless Pair sends two potentiometer values wirelessly as the two muscle signals",
+                "Controls Pair codes the response logic: correct muscle means happy face and movement, wrong or both means confused face and no movement",
+                "Connect both halves so turning a potentiometer on one ESP32 makes the robot ESP32 react"
+              ],
+              "deliv": "Full system demo with fake signals",
+              "lab": false
+            },
+            "Biomedical": {
+              "title": "First Real EMG",
+              "items": [
+                "Calibration Pair writes simple Arduino code to log signal readings",
+                "Test candidate electrode sites on a forearm with Electrical's channel 1 circuit and log which sites give the strongest, cleanest signal"
+              ],
+              "deliv": "Logging code, site comparison data, and chosen sites",
+              "lab": true
+            }
+          }
+        },
+        {
+          "n": "8",
+          "date": "Nov 25",
+          "off": "Thanksgiving Break",
+          "pink": true
+        },
+        {
+          "n": "9",
+          "date": "Dec 2",
+          "off": "Last day of school",
+          "pink": true
+        }
+      ]
+    },
+    {
+      "id": "spring",
+      "name": "Spring 2027",
+      "year": 2027,
+      "theme": "Integration, testing, and showcase",
+      "weeks": [
+        {
+          "n": "1",
+          "date": "Jan 13",
+          "teams": {
+            "Mechanical": {
+              "title": "Spring Kickoff",
+              "items": [
+                "Get final board size limits from Electrical"
+              ],
+              "deliv": "Updated internal layout plan",
+              "lab": false
+            },
+            "Electrical": {
+              "title": "Channel 2 and LEDs",
+              "items": [
+                "Cuff Pair builds channel 2 and debugs both channels with Biomedical",
+                "Robot Pair builds the LED signal strength circuit",
+                "Agree on maximum board sizes with Mechanical and Biomedical"
+              ],
+              "deliv": "Two working EMG channels, working LED circuit, and board size limits",
+              "lab": true
+            },
+            "Software": {
+              "title": "Spring Kickoff and Calibration Plan",
+              "items": [
+                "Clean up and comment fall code and set up a shared GitHub repository",
+                "Measure the delay between input and response",
+                "Plan the calibration approach with Biomedical"
+              ],
+              "deliv": "Shared code repository, delay measurement, and calibration plan",
+              "lab": false
+            },
+            "Biomedical": {
+              "title": "Two Channel Test and Cuff CAD",
+              "items": [
+                "Calibration Pair tests both channels with Electrical and checks that flexing one muscle doesn't trigger the other, then finalizes electrode sites",
+                "Biosignal Pair CADs the cuff, including electrode holders, strap mounts, and a housing for Electrical's board and battery"
+              ],
+              "deliv": "Confirmed independent channels, final sites, and cuff CAD",
+              "lab": true
+            }
+          }
+        },
+        {
+          "n": "2",
+          "date": "Jan 20",
+          "teams": {
+            "Mechanical": {
+              "title": "Body v2",
+              "items": [
+                "Redesign the body around real Electrical components"
+              ],
+              "deliv": "Body v2 CAD with a fit check from Electrical",
+              "lab": false
+            },
+            "Electrical": {
+              "title": "Schematics and PCB Layout",
+              "items": [
+                "Cuff Pair works through the schematic section of the KiCad course, then draws the cuff schematic",
+                "Robot Pair adds the LED circuit to the robot schematic",
+                "Both pairs start the PCB layout section of the course"
+              ],
+              "deliv": "Final KiCad schematics and started board layouts",
+              "lab": false
+            },
+            "Software": {
+              "title": "Calibration Mode",
+              "items": [
+                "Code a calibration routine with Biomedical that records resting and max flex signals and sets thresholds"
+              ],
+              "deliv": "Working calibration mode with fake signals",
+              "lab": false
+            },
+            "Biomedical": {
+              "title": "Calibration Mode",
+              "items": [
+                "Calibration Pair codes the calibration routine with Software",
+                "Biosignal Pair sends the cuff parts to print"
+              ],
+              "deliv": "Working calibration mode with fake signals and cuff parts in the print queue",
+              "lab": false
+            }
+          }
+        },
+        {
+          "n": "3",
+          "date": "Jan 27",
+          "teams": {
+            "Mechanical": {
+              "title": "Reprints",
+              "items": [
+                "Print body v2 and arm v2 with fall fixes"
+              ],
+              "deliv": "Printed v2 parts",
+              "lab": false
+            },
+            "Electrical": {
+              "title": "Finish Layout, Review, and Order",
+              "items": [
+                "Finish both layouts using through hole parts, 2 layers, and a compact size",
+                "Run KiCad's design rules check and review both boards as a full team",
+                "Order bare boards"
+              ],
+              "deliv": "PCBs ordered",
+              "lab": false
+            },
+            "Software": {
+              "title": "Smoothing and Polish",
+              "items": [
+                "Add signal smoothing to reduce jitter",
+                "Polish the face animations"
+              ],
+              "deliv": "Smoother response and finished face set",
+              "lab": false
+            },
+            "Biomedical": {
+              "title": "Cuff Assembly",
+              "items": [
+                "Assemble the printed parts with straps and electrode snaps"
+              ],
+              "deliv": "Assembled cuff",
+              "lab": false
+            }
+          }
+        },
+        {
+          "n": "4",
+          "date": "Feb 3",
+          "teams": {
+            "Mechanical": {
+              "title": "Arm Integration",
+              "items": [
+                "Mount servos and test the arm with Software's control code"
+              ],
+              "deliv": "Arm moving from code commands",
+              "lab": false
+            },
+            "Electrical": {
+              "title": "Signal to ESP32",
+              "items": [
+                "Connect the breadboard EMG output to the cuff ESP32 with Software and match voltage levels"
+              ],
+              "deliv": "Clean signal readings in Software's code",
+              "lab": false
+            },
+            "Software": {
+              "title": "Signal to ESP32",
+              "items": [
+                "Read the real EMG output from Electrical's circuit and match voltage levels together",
+                "Share servo control code with Mechanical for arm integration"
+              ],
+              "deliv": "Clean real signal readings",
+              "lab": false
+            },
+            "Biomedical": {
+              "title": "Test Protocol",
+              "items": [
+                "Write the full user test protocol, including calibration steps, tasks, and what to measure",
+                "Choose club member volunteers as testers"
+              ],
+              "deliv": "Final test protocol and tester list",
+              "lab": false
+            }
+          }
+        },
+        {
+          "n": "5",
+          "date": "Feb 10",
+          "teams": {
+            "Mechanical": {
+              "title": "Claw Tuning",
+              "items": [
+                "Tune string tension so the claw works reliably with live EMG control"
+              ],
+              "deliv": "Consistent claw grip",
+              "lab": false
+            },
+            "Electrical": {
+              "title": "Soldering Day",
+              "items": [
+                "Soldering training, then solder components onto the PCBs",
+                "Backup plan: solder onto perfboard if the boards haven't arrived"
+              ],
+              "deliv": "Soldered cuff and robot boards",
+              "lab": true
+            },
+            "Software": {
+              "title": "Real EMG Control",
+              "items": [
+                "Replace fake signals with real ones and drive the claw with live EMG alongside Mechanical"
+              ],
+              "deliv": "Claw controlled by real muscle signals",
+              "lab": false
+            },
+            "Biomedical": {
+              "title": "Calibration with Real Signals",
+              "items": [
+                "Run calibration with real EMG signals and adjust the code and steps as needed"
+              ],
+              "deliv": "Calibration working on real signals",
+              "lab": false
+            }
+          }
+        },
+        {
+          "n": "6",
+          "date": "Feb 17",
+          "teams": {
+            "Mechanical": {
+              "title": "Face and LED Mounting",
+              "items": [
+                "Fit the OLED face and LEDs into the body with Software and Electrical"
+              ],
+              "deliv": "Face and LEDs securely mounted and visible",
+              "lab": false
+            },
+            "Electrical": {
+              "title": "Board Testing and Cuff Power",
+              "items": [
+                "Test each soldered board and fix any issues",
+                "Add the battery and regulator to the cuff and fit the board with Biomedical's cuff design"
+              ],
+              "deliv": "Working PCBs and a wireless, battery powered cuff",
+              "lab": false
+            },
+            "Software": {
+              "title": "Face and LED Mounting",
+              "items": [
+                "Test the OLED and LEDs once mounted in the body with Mechanical and Electrical"
+              ],
+              "deliv": "Face clearly visible and working inside the robot",
+              "lab": false
+            },
+            "Biomedical": {
+              "title": "Cuff Fit and Comfort",
+              "items": [
+                "Fit Electrical's board and battery into the cuff and test comfort on several testers"
+              ],
+              "deliv": "Wearable, wireless cuff",
+              "lab": false
+            }
+          }
+        },
+        {
+          "n": "7",
+          "date": "Feb 24",
+          "teams": {
+            "Mechanical": {
+              "title": "Full Assembly v1",
+              "items": [
+                "Install all electronics inside the body"
+              ],
+              "deliv": "First fully assembled robot",
+              "lab": false
+            },
+            "Electrical": {
+              "title": "Full Assembly v1",
+              "items": [
+                "Install the robot board, LEDs, and OLED wiring inside the body with Mechanical and Software"
+              ],
+              "deliv": "First fully assembled robot",
+              "lab": false
+            },
+            "Software": {
+              "title": "Full Assembly v1",
+              "items": [
+                "Load final code onto both ESP32s in the assembled robot and cuff"
+              ],
+              "deliv": "First fully assembled robot running",
+              "lab": false
+            },
+            "Biomedical": {
+              "title": "Full Assembly v1",
+              "items": [
+                "Do a first full run of the protocol on the assembled robot"
+              ],
+              "deliv": "Protocol trial run",
+              "lab": false
+            }
+          }
+        },
+        {
+          "n": "8",
+          "date": "Mar 3",
+          "teams": {
+            "Mechanical": {
+              "title": "System Testing",
+              "items": [
+                "Test with Biomedical's users and log mechanical failures"
+              ],
+              "deliv": "Test log and fix list",
+              "lab": false
+            },
+            "Electrical": {
+              "title": "System Testing",
+              "items": [
+                "Test signal quality across Biomedical's users and log noise issues"
+              ],
+              "deliv": "Signal quality log",
+              "lab": false
+            },
+            "Software": {
+              "title": "System Testing",
+              "items": [
+                "Test with Biomedical's users and log delays, misreads, and dropped connections"
+              ],
+              "deliv": "Software test log",
+              "lab": false
+            },
+            "Biomedical": {
+              "title": "System Testing",
+              "items": [
+                "Run the test protocol with club member testers, recording success rate and how quickly each person learns control"
+              ],
+              "deliv": "Round 1 test data",
+              "lab": false
+            }
+          }
+        },
+        {
+          "n": "9",
+          "date": "Mar 10",
+          "teams": {
+            "Mechanical": {
+              "title": "Iteration",
+              "items": [
+                "Reprint and fix fit and durability issues"
+              ],
+              "deliv": "Revised parts installed",
+              "lab": false
+            },
+            "Electrical": {
+              "title": "Iteration",
+              "items": [
+                "Fix noise problems and adjust gain with Biomedical's calibration results"
+              ],
+              "deliv": "Improved signal reliability",
+              "lab": false
+            },
+            "Software": {
+              "title": "Iteration",
+              "items": [
+                "Tune thresholds and response logic and reduce delay"
+              ],
+              "deliv": "More reliable and responsive robot",
+              "lab": false
+            },
+            "Biomedical": {
+              "title": "Data Analysis",
+              "items": [
+                "Analyze results and share calibration findings with Electrical and Software"
+              ],
+              "deliv": "Results summary and tuning recommendations",
+              "lab": false
+            }
+          }
+        },
+        {
+          "n": "10",
+          "date": "Mar 17",
+          "off": "Spring Break"
+        },
+        {
+          "n": "11",
+          "date": "Mar 24",
+          "teams": {
+            "Mechanical": {
+              "title": "Kid Friendly Finish",
+              "items": [
+                "Add personality details, smooth edges, and finish the look"
+              ],
+              "deliv": "Finished exterior",
+              "lab": false
+            },
+            "Electrical": {
+              "title": "Reliability Testing",
+              "items": [
+                "Test battery life and check connections under repeated use"
+              ],
+              "deliv": "Battery life and reliability results",
+              "lab": false
+            },
+            "Software": {
+              "title": "Kid Friendly Features",
+              "items": [
+                "Add reward animations, like a celebration when a child gets several in a row"
+              ],
+              "deliv": "Extra animations and reactions",
+              "lab": false
+            },
+            "Biomedical": {
+              "title": "Round 2 Testing",
+              "items": [
+                "Retest after the fixes and compare to Round 1",
+                "Reprint any cuff parts that need changes"
+              ],
+              "deliv": "Round 2 data showing improvement",
+              "lab": false
+            }
+          }
+        },
+        {
+          "n": "12",
+          "date": "Mar 31",
+          "teams": {
+            "Mechanical": {
+              "title": "Durability and Spares",
+              "items": [
+                "Stress test moving parts and print spare claw and arm pieces"
+              ],
+              "deliv": "Spare parts kit",
+              "lab": false
+            },
+            "Electrical": {
+              "title": "Documentation and Spares",
+              "items": [
+                "Create a wiring diagram and solder a spare set of boards from the extras in your order"
+              ],
+              "deliv": "Wiring diagram and backup boards",
+              "lab": false
+            },
+            "Software": {
+              "title": "Edge Cases and Documentation",
+              "items": [
+                "Handle a lost Bluetooth connection with a \"sleepy\" face and automatic reconnect",
+                "Finish code comments and a README"
+              ],
+              "deliv": "Stable code and documentation",
+              "lab": false
+            },
+            "Biomedical": {
+              "title": "Clinical Context and User Guide",
+              "items": [
+                "Write a short guide on how a therapist and child would use the robot, including calibration"
+              ],
+              "deliv": "User guide",
+              "lab": false
+            }
+          }
+        },
+        {
+          "n": "13",
+          "date": "Apr 7",
+          "teams": {
+            "Mechanical": {
+              "title": "Showcase Prep",
+              "items": [
+                "Build a display stand and rehearse the demo",
+                "Finalize documentation and resume bullets"
+              ],
+              "deliv": "Demo ready robot",
+              "lab": false
+            },
+            "Electrical": {
+              "title": "Showcase Prep",
+              "items": [
+                "Build a display with a bare PCB, its schematic, and waveform screenshots from each stage",
+                "Rehearse the demo and finalize resume bullets"
+              ],
+              "deliv": "Signal chain display and demo ready electronics",
+              "lab": false
+            },
+            "Software": {
+              "title": "Showcase Prep",
+              "items": [
+                "Build a demo mode and a live signal display on a laptop for visitors",
+                "Rehearse the demo and finalize resume bullets"
+              ],
+              "deliv": "Demo ready software",
+              "lab": false
+            },
+            "Biomedical": {
+              "title": "Showcase Prep",
+              "items": [
+                "Build a poster with the problem, electrode sites, and test results",
+                "Rehearse the demo and finalize resume bullets"
+              ],
+              "deliv": "Results poster and demo ready cuff",
+              "lab": false
+            }
+          }
+        },
+        {
+          "n": "14",
+          "date": "Apr 14",
+          "all": "show"
+        },
+        {
+          "n": "15",
+          "date": "Apr 21",
+          "all": "buffer"
+        }
+      ]
+    }
+  ]
+}
