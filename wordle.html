@@ -4,22 +4,25 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>EMBS Wordle</title>
+<link rel="icon" href="embs-logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;700&family=Figtree:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
   --bg:#F4F5F8;--surface:#FFFFFF;--ink:#16202E;--muted:#5B6676;--line:#D3D9E2;
-  --navy:#1F3A5F;--green:#3E8E5C;--yellow:#C9A227;--gray:#7A8494;--key:#DDE3EB;
+  --navy:#7C2A7D;--teal:#246283;--green:#3E8E5C;--yellow:#C9A227;--gray:#7A8494;--key:#DDE3EB;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
   --bg:#0F1621;--surface:#172131;--ink:#E8EDF4;--muted:#9AA6B6;--line:#2B394D;
-  --navy:#8FB3DE;--key:#2A3546;--gray:#465264;
+  --navy:#D39BD4;--teal:#7FB6D4;--key:#2A3546;--gray:#465264;
 }}
 *{box-sizing:border-box;margin:0}
 html,body{height:100%}
 body{background:var(--bg);color:var(--ink);font-family:Figtree,system-ui,sans-serif;display:flex;flex-direction:column;align-items:center;-webkit-tap-highlight-color:transparent}
 header{width:100%;max-width:520px;padding:14px 16px 6px;display:flex;flex-direction:column;align-items:center;gap:6px}
 .eyebrow{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.brand{display:flex;align-items:center;gap:10px}
+.brand img{width:46px;height:46px}
 h1{font-family:Unbounded,sans-serif;font-size:26px;color:var(--navy);letter-spacing:.02em}
 .rounds{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-top:4px}
 .rounds button{font:600 13px Figtree,sans-serif;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:5px 11px;cursor:pointer}
@@ -27,7 +30,7 @@ h1{font-family:Unbounded,sans-serif;font-size:26px;color:var(--navy);letter-spac
 .rounds button.won::after{content:" ✓"}
 main{flex:1;width:100%;max-width:520px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:8px 16px}
 .hintbar{display:flex;gap:8px;align-items:center;justify-content:center;min-height:36px;flex-wrap:wrap;text-align:center}
-.hintbtn{font:600 13px Figtree,sans-serif;background:transparent;border:1.5px dashed var(--navy);color:var(--navy);border-radius:10px;padding:6px 12px;cursor:pointer}
+.hintbtn{font:600 13px Figtree,sans-serif;background:transparent;border:1.5px dashed var(--teal);color:var(--teal);border-radius:10px;padding:6px 12px;cursor:pointer}
 .hint{font-size:14px;color:var(--muted);max-width:360px}
 .board{display:grid;grid-template-rows:repeat(6,1fr);gap:6px;width:min(300px,74vw,40vh);aspect-ratio:5/6}
 .row{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
@@ -58,7 +61,7 @@ button:focus-visible{outline:2px solid var(--navy);outline-offset:2px}
 <body>
 <header>
   <span class="eyebrow">IEEE EMBS at UF · GBM Edition</span>
-  <h1>EMBS WORDLE</h1>
+  <div class="brand"><img src="embs-logo.png" alt="IEEE EMBS logo"><h1>EMBS WORDLE</h1></div>
   <div class="rounds" id="rounds" aria-label="Choose a round"></div>
 </header>
 <main>
