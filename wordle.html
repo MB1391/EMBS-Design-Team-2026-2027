@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>EMBS Wordle</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;700&family=Figtree:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F4F5F8;--surface:#FFFFFF;--ink:#16202E;--muted:#5B6676;--line:#D3D9E2;
+  --navy:#1F3A5F;--green:#3E8E5C;--yellow:#C9A227;--gray:#7A8494;--key:#DDE3EB;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0F1621;--surface:#172131;--ink:#E8EDF4;--muted:#9AA6B6;--line:#2B394D;
+  --navy:#8FB3DE;--key:#2A3546;--gray:#465264;
+}}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%}
+body{background:var(--bg);color:var(--ink);font-family:Figtree,system-ui,sans-serif;display:flex;flex-direction:column;align-items:center;-webkit-tap-highlight-color:transparent}
+header{width:100%;max-width:520px;padding:14px 16px 6px;display:flex;flex-direction:column;align-items:center;gap:6px}
+.eyebrow{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:600}
+h1{font-family:Unbounded,sans-serif;font-size:26px;color:var(--navy);letter-spacing:.02em}
+.rounds{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-top:4px}
+.rounds button{font:600 13px Figtree,sans-serif;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:5px 11px;cursor:pointer}
+.rounds button[aria-pressed="true"]{background:var(--navy);border-color:var(--navy);color:var(--bg)}
+.rounds button.won::after{content:" ✓"}
+main{flex:1;width:100%;max-width:520px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:8px 16px}
+.hintbar{display:flex;gap:8px;align-items:center;justify-content:center;min-height:36px;flex-wrap:wrap;text-align:center}
+.hintbtn{font:600 13px Figtree,sans-serif;background:transparent;border:1.5px dashed var(--navy);color:var(--navy);border-radius:10px;padding:6px 12px;cursor:pointer}
+.hint{font-size:14px;color:var(--muted);max-width:360px}
+.board{display:grid;grid-template-rows:repeat(6,1fr);gap:6px;width:min(300px,74vw,40vh);aspect-ratio:5/6}
+.row{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.row.shake{animation:shake .4s}
+@keyframes shake{20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
+.tile{border:2px solid var(--line);display:flex;align-items:center;justify-content:center;font:700 clamp(22px,7vw,34px) Unbounded,sans-serif;text-transform:uppercase;user-select:none;background:var(--surface);border-radius:6px}
+.tile.filled{border-color:var(--muted);animation:pop .1s}
+@keyframes pop{50%{transform:scale(1.08)}}
+.tile.flip{animation:flip .5s ease forwards}
+@keyframes flip{0%{transform:rotateX(0)}50%{transform:rotateX(90deg)}100%{transform:rotateX(0)}}
+.correct{background:var(--green)!important;border-color:var(--green)!important;color:#fff}
+.present{background:var(--yellow)!important;border-color:var(--yellow)!important;color:#fff}
+.absent{background:var(--gray)!important;border-color:var(--gray)!important;color:#fff}
+.msg{min-height:24px;font-weight:700;text-align:center}
+.done{display:none;flex-direction:column;align-items:center;gap:8px;text-align:center}
+.done.show{display:flex}
+.done .fact{font-size:14px;color:var(--muted);max-width:360px}
+.done .actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.btn{font:700 14px Figtree,sans-serif;border:none;border-radius:10px;padding:10px 16px;cursor:pointer;background:var(--navy);color:var(--bg)}
+.btn.ghost{background:transparent;border:1.5px solid var(--navy);color:var(--navy)}
+.kb{width:100%;max-width:520px;padding:6px 6px 14px;display:flex;flex-direction:column;gap:7px}
+.kr{display:flex;gap:5px;justify-content:center}
+.k{flex:1;max-width:44px;height:50px;border:none;border-radius:6px;background:var(--key);color:var(--ink);font:700 15px Figtree,sans-serif;text-transform:uppercase;cursor:pointer;touch-action:manipulation}
+.k.wide{max-width:68px;flex:1.5;font-size:12px}
+button:focus-visible{outline:2px solid var(--navy);outline-offset:2px}
+</style>
+</head>
+<body>
+<header>
+  <span class="eyebrow">IEEE EMBS at UF · GBM Edition</span>
+  <h1>EMBS WORDLE</h1>
+  <div class="rounds" id="rounds" aria-label="Choose a round"></div>
+</header>
+<main>
+  <div class="hintbar"><button class="hintbtn" id="hintBtn" type="button">Need a hint?</button><span class="hint" id="hint" hidden></span></div>
+  <div class="board" id="board" aria-live="polite"></div>
+  <div class="msg" id="msg" role="status"></div>
+  <div class="done" id="done">
+    <div class="fact" id="fact"></div>
+    <div class="actions">
+      <button class="btn" id="shareBtn" type="button">Copy my result</button>
+      <button class="btn ghost" id="nextBtn" type="button">Next round →</button>
+    </div>
+  </div>
+</main>
+<div class="kb" id="kb"></div>
+<script>
+const ROUNDS=[
+ {w:"PULSE",hint:"A pulse oximeter clips onto your finger to count this.",fact:"PULSE: pulse oximeters shine red and infrared light through your finger to measure heart rate and blood oxygen."},
+ {w:"NERVE",hint:"Carries signals from your brain to your muscles.",fact:"NERVE: our EMG robot reads the electrical signal your nerves send to your forearm muscles."},
+ {w:"STENT",hint:"A tiny mesh tube that holds a blocked artery open.",fact:"STENT: millions of stents are placed each year, and some slowly release drugs to keep the artery from narrowing again."},
+ {w:"FEMUR",hint:"The longest bone in your body.",fact:"FEMUR: the thigh bone can support many times your body weight, which is why bone implants are so carefully engineered."},
+ {w:"LASER",hint:"Focused light used to reshape your cornea in eye surgery.",fact:"LASER: LASIK uses a laser to reshape the cornea so light focuses correctly on the retina."},
+ {w:"MOTOR",hint:"The kind of neuron that tells a muscle to contract.",fact:"MOTOR: motor neurons fire, muscles contract, and electrodes on the skin pick that up as an EMG signal."},
+ {w:"HEART",hint:"A pacemaker keeps this organ on rhythm.",fact:"HEART: the first fully implantable pacemaker was placed in 1958, and today some are smaller than a vitamin."},
+ {w:"OPTIC",hint:"The ___ nerve connects your eye to your brain.",fact:"OPTIC: the optic nerve carries about a million nerve fibers from each eye to the brain."}
+];
+const KEYS=["QWERTYUIOP","ASDFGHJKL","⏎ZXCVBNM⌫"];
+const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+let r=0,guesses=[],cur="",over=false,busy=false;
+const $=id=>document.getElementById(id);
+function saved(i){return store.get("embs-wordle-"+i,{guesses:[]})}
+function renderRounds(){
+  $("rounds").innerHTML=ROUNDS.map((x,i)=>{const s=saved(i);const won=s.guesses.includes(x.w);return `<button type="button" data-i="${i}" aria-pressed="${i===r}" class="${won?"won":""}">Round ${i+1}</button>`}).join("");
+  $("rounds").querySelectorAll("button").forEach(b=>b.onclick=()=>load(+b.dataset.i));
+}
+function score(g,w){
+  const res=Array(5).fill("absent"),cnt={};
+  for(const c of w)cnt[c]=(cnt[c]||0)+1;
+  for(let i=0;i<5;i++)if(g[i]===w[i]){res[i]="correct";cnt[g[i]]--}
+  for(let i=0;i<5;i++)if(res[i]!=="correct"&&cnt[g[i]]>0){res[i]="present";cnt[g[i]]--}
+  return res;
+}
+function buildBoard(){
+  $("board").innerHTML=Array.from({length:6},(_,i)=>`<div class="row" id="row${i}">${"<div class='tile'></div>".repeat(5)}</div>`).join("");
+}
+function paintRow(i,word,res,animate){
+  const tiles=$("row"+i).children;
+  for(let j=0;j<5;j++){
+    const t=tiles[j];t.textContent=word[j]||"";t.className="tile"+(word[j]?" filled":"");
+    if(res){
+      if(animate){setTimeout(()=>{t.classList.add("flip");setTimeout(()=>t.classList.add(res[j]),250)},j*220)}
+      else t.classList.add(res[j]);
+    }
+  }
+}
+function paintKeys(){
+  const best={};const rank={absent:1,present:2,correct:3};
+  for(const g of guesses){const s=score(g,ROUNDS[r].w);[...g].forEach((c,i)=>{if(!best[c]||rank[s[i]]>rank[best[c]])best[c]=s[i]})}
+  document.querySelectorAll(".k").forEach(k=>{const c=k.dataset.k;k.classList.remove("correct","present","absent");if(best[c])k.classList.add(best[c])});
+}
+function finish(won){
+  over=true;
+  const x=ROUNDS[r];
+  $("msg").textContent=won?["Genius! 🧠","Magnificent!","Impressive!","Splendid!","Great!","Phew!"][guesses.length-1]:"The word was "+x.w;
+  $("fact").textContent=x.fact;$("done").classList.add("show");
+  $("nextBtn").style.display=r<ROUNDS.length-1?"":"none";
+  if(won)confetti();
+  renderRounds();
+}
+function load(i){
+  r=i;const s=saved(i);guesses=s.guesses||[];cur="";over=false;busy=false;
+  $("msg").textContent="";$("done").classList.remove("show");$("hint").hidden=true;$("hintBtn").hidden=false;$("hint").textContent=ROUNDS[i].hint;
+  buildBoard();guesses.forEach((g,k)=>paintRow(k,g,score(g,ROUNDS[i].w),false));paintKeys();renderRounds();
+  const w=ROUNDS[i].w;
+  if(guesses.includes(w))finish(true);else if(guesses.length>=6)finish(false);
+}
+function press(k){
+  if(over||busy)return;
+  if(k==="⌫"||k==="BACKSPACE"){cur=cur.slice(0,-1)}
+  else if(k==="⏎"||k==="ENTER"){
+    if(cur.length<5){$("row"+guesses.length).classList.remove("shake");void $("row"+guesses.length).offsetWidth;$("row"+guesses.length).classList.add("shake");$("msg").textContent="Not enough letters";setTimeout(()=>{if(!over)$("msg").textContent=""},1200);return}
+    const w=ROUNDS[r].w,res=score(cur,w),row=guesses.length;
+    guesses.push(cur);store.set("embs-wordle-"+r,{guesses});
+    busy=true;paintRow(row,cur,res,true);const g=cur;cur="";
+    setTimeout(()=>{busy=false;paintKeys();if(g===w)finish(true);else if(guesses.length>=6)finish(false)},5*220+300);
+    return;
+  }
+  else if(/^[A-Z]$/.test(k)&&cur.length<5){cur+=k}
+  paintRow(guesses.length,cur,null,false);
+}
+function buildKb(){
+  $("kb").innerHTML=KEYS.map(row=>`<div class="kr">${[...row].map(c=>`<button type="button" class="k${c==="⏎"||c==="⌫"?" wide":""}" data-k="${c}" aria-label="${c==="⏎"?"Enter":c==="⌫"?"Backspace":c}">${c==="⏎"?"Enter":c}</button>`).join("")}</div>`).join("");
+  $("kb").querySelectorAll(".k").forEach(b=>b.onclick=()=>{press(b.dataset.k);b.blur()});
+}
+document.addEventListener("keydown",e=>{if(e.metaKey||e.ctrlKey||e.altKey)return;const k=e.key.toUpperCase();if(k==="ENTER"||k==="BACKSPACE"||/^[A-Z]$/.test(k)){e.preventDefault();press(k)}});
+$("hintBtn").onclick=()=>{$("hint").hidden=false;$("hintBtn").hidden=true};
+$("nextBtn").onclick=()=>load(Math.min(r+1,ROUNDS.length-1));
+$("shareBtn").onclick=()=>{
+  const w=ROUNDS[r].w,won=guesses.includes(w);
+  const grid=guesses.map(g=>score(g,w).map(s=>s==="correct"?"🟩":s==="present"?"🟨":"⬛").join("")).join("\n");
+  const txt=`EMBS Wordle Round ${r+1} ${won?guesses.length:"X"}/6\n${grid}`;
+  (navigator.clipboard?navigator.clipboard.writeText(txt):Promise.reject()).then(()=>{$("shareBtn").textContent="Copied!";setTimeout(()=>$("shareBtn").textContent="Copy my result",1500)}).catch(()=>{prompt("Copy your result:",txt)});
+};
+function confetti(){
+  if(matchMedia("(prefers-reduced-motion: reduce)").matches)return;
+  const c=document.createElement("canvas");c.style.cssText="position:fixed;inset:0;pointer-events:none;z-index:9";document.body.appendChild(c);
+  const x=c.getContext("2d");c.width=innerWidth;c.height=innerHeight;
+  const cols=["#3E8E5C","#C9A227","#1F3A5F","#5B4BB7","#B5532C","#A83A63"];
+  const ps=Array.from({length:120},()=>({x:Math.random()*c.width,y:-20-Math.random()*c.height*.5,vx:(Math.random()-.5)*3,vy:2+Math.random()*3,s:5+Math.random()*6,c:cols[Math.random()*cols.length|0],a:Math.random()*6}));
+  let t=0;(function f(){x.clearRect(0,0,c.width,c.height);ps.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.a+=.1;x.save();x.translate(p.x,p.y);x.rotate(p.a);x.fillStyle=p.c;x.fillRect(-p.s/2,-p.s/4,p.s,p.s/2);x.restore()});if(++t<180)requestAnimationFrame(f);else c.remove()})();
+}
+buildKb();load(0);
+</script>
+</body>
+</html>
