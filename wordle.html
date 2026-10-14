@@ -168,7 +168,7 @@ function buildKb(){
   $("kb").innerHTML=KEYS.map(row=>`<div class="kr">${[...row].map(c=>`<button type="button" class="k${c==="⏎"||c==="⌫"?" wide":""}" data-k="${c}" aria-label="${c==="⏎"?"Enter":c==="⌫"?"Backspace":c}">${c==="⏎"?"Enter":c}</button>`).join("")}</div>`).join("");
   $("kb").querySelectorAll(".k").forEach(b=>b.onclick=()=>{press(b.dataset.k);b.blur()});
 }
-document.addEventListener("keydown",e=>{if(e.metaKey||e.ctrlKey||e.altKey)return;const k=e.key.toUpperCase();if(k==="ENTER"||k==="BACKSPACE"||/^[A-Z]$/.test(k)){e.preventDefault();press(k)}});
+document.addEventListener("keydown",e=>{if(e.metaKey||e.ctrlKey||e.altKey)return;if(!$("join").hidden||/^(INPUT|TEXTAREA)$/.test(e.target.tagName))return;const k=e.key.toUpperCase();if(k==="ENTER"||k==="BACKSPACE"||/^[A-Z]$/.test(k)){e.preventDefault();press(k)}});
 $("hintBtn").onclick=()=>{$("hint").hidden=false;$("hintBtn").hidden=true};
 $("nextBtn").onclick=()=>load(Math.min(r+1,ROUNDS.length-1));
 $("shareBtn").onclick=()=>{
@@ -188,7 +188,7 @@ function confetti(){
 const TOPIC="embs-gbm-wordle-x7k4p2";
 let team=store.get("embs-wordle-team","");
 function showTeam(){if(team){$("teamName").textContent=team;$("teambar").hidden=false;$("join").hidden=true}else{$("teambar").hidden=true;$("join").hidden=false;setTimeout(()=>$("teamInput").focus(),50)}}
-$("joinForm").onsubmit=e=>{e.preventDefault();const v=$("teamInput").value.trim().replace(/\s+/g," ");if(!v)return;team=v;store.set("embs-wordle-team",team);showTeam();send({k:"join"})};
+$("joinForm").onsubmit=e=>{e.preventDefault();const v=$("teamInput").value.trim().replace(/\s+/g," ");if(!v)return;$("teamInput").blur();team=v;store.set("embs-wordle-team",team);showTeam();send({k:"join"})};
 $("changeTeam").onclick=()=>{$("teamInput").value=team;team="";showTeam()};
 function send(extra){
   if(!team)return;
