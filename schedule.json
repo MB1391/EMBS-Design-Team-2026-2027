@@ -1,5 +1,5 @@
 {
-  "_readme": "Edit this file to change the schedule. Each week has a number, a Wednesday date, and either tasks per team, an 'off' reason for no meeting, or 'all' for Showcase or Buffer weeks.",
+  "_readme": "Edit this file to change the schedule. Each week has a number, a Wednesday date, and either tasks per team, an 'off' reason for no meeting, or 'all' for Showcase or Buffer weeks. To link a worksheet, add a \"worksheet\" line with the Google Doc link inside a team's week, right after \"lab\".",
   "teams": [
     {
       "name": "Mechanical"
