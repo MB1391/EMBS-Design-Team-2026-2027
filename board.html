@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>EMBS Wordle · Live Board</title>
+<link rel="icon" href="embs-logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;700&family=Figtree:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F4F5F8;--surface:#FFFFFF;--ink:#16202E;--muted:#5B6676;--line:#D3D9E2;--navy:#7C2A7D;--teal:#246283;--green:#3E8E5C;--yellow:#C9A227;--gray:#7A8494;--empty:#E4E8EE}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0F1621;--surface:#172131;--ink:#E8EDF4;--muted:#9AA6B6;--line:#2B394D;--navy:#D39BD4;--teal:#7FB6D4;--gray:#465264;--empty:#243042}}
+*{box-sizing:border-box;margin:0}
+body{background:var(--bg);color:var(--ink);font-family:Figtree,system-ui,sans-serif;min-height:100vh;padding:24px clamp(16px,3vw,40px) 40px}
+header{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:20px}
+.brand{display:flex;align-items:center;gap:14px}
+.brand img{width:64px;height:64px}
+h1{font-family:Unbounded,sans-serif;font-size:clamp(24px,3.4vw,40px);color:var(--navy)}
+.sub{font-size:15px;color:var(--muted)}
+.controls{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.rounds{display:flex;gap:6px;flex-wrap:wrap}
+.rounds button,.ghost{font:600 15px Figtree,sans-serif;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:7px 14px;cursor:pointer}
+.rounds button[aria-pressed="true"]{background:var(--navy);border-color:var(--navy);color:var(--bg)}
+.live{display:inline-flex;align-items:center;gap:6px;font:600 13px Figtree,sans-serif;color:var(--muted)}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--gray)}
+.live.on .dot{background:var(--green);box-shadow:0 0 0 0 rgba(62,142,92,.6);animation:ping 1.6s infinite}
+@keyframes ping{70%{box-shadow:0 0 0 8px rgba(62,142,92,0)}100%{box-shadow:0 0 0 0 rgba(62,142,92,0)}}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:16px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:12px;align-items:center;transition:transform .3s}
+.card.win{border:2px solid var(--green)}
+.card.out{opacity:.7}
+.place{font:700 13px Figtree,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);align-self:stretch;display:flex;justify-content:space-between}
+.place .medal{font-size:20px;line-height:1}
+.tname{font:700 20px Figtree,sans-serif;text-align:center;word-break:break-word}
+.mini{display:grid;grid-template-rows:repeat(6,1fr);gap:4px}
+.mr{display:grid;grid-template-columns:repeat(5,26px);gap:4px}
+.mc{height:26px;border-radius:4px;background:var(--empty)}
+.mc.c{background:var(--green)}.mc.p{background:var(--yellow)}.mc.a{background:var(--gray)}
+.status{font:700 15px Figtree,sans-serif}
+.status.win{color:var(--green)}
+.empty{grid-column:1/-1;text-align:center;padding:60px 16px;color:var(--muted);font-size:18px;border:2px dashed var(--line);border-radius:16px}
+.empty b{color:var(--navy)}
+footer{margin-top:24px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:var(--muted);font-size:13px}
+button:focus-visible{outline:2px solid var(--navy);outline-offset:2px}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand"><img src="embs-logo.png" alt="IEEE EMBS logo"><div><h1>EMBS WORDLE</h1><div class="sub">Live team board · scan the QR code to join</div></div></div>
+  <div class="controls"><div class="rounds" id="rounds"></div><span class="live" id="live"><span class="dot"></span><span id="liveText">Connecting…</span></span></div>
+</header>
+<main class="grid" id="grid"></main>
+<footer><span>Only colors are shown here, never letters, so no spoilers.</span><button class="ghost" id="reset" type="button">Start a new game</button></footer>
+<script>
+const TOPIC="embs-gbm-wordle-x7k4p2", NROUNDS=8;
+const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+let since=store.get("embs-board-since",Math.floor(Date.now()/1000)-3*3600);
+let round=store.get("embs-board-round",1), autoRound=true;
+let data={};        // data[round][teamKey] = {name,rows,win,out,n,ts,first}
+let teams={};       // teamKey -> name (joined)
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const key=n=>n.trim().toLowerCase().replace(/\s+/g," ");
+function ingest(m){
+  if(!m||typeof m.t!=="string"||!m.t.trim())return;
+  const k=key(m.t).slice(0,30); teams[k]=teams[k]||m.t.trim().slice(0,30);
+  if(m.k!=="g"||!(m.r>=1&&m.r<=NROUNDS)||!Array.isArray(m.rows))return;
+  const rows=m.rows.slice(0,6).map(x=>String(x).slice(0,5).replace(/[^cpa]/g,"a"));
+  const R=data[m.r]=data[m.r]||{};
+  const prev=R[k];
+  if(prev&&prev.rows.length>rows.length)return;
+  R[k]={name:teams[k],rows,win:!!m.win,out:!!m.out,ts:+m.ts||Date.now(),first:prev?prev.first:(+m.ts||Date.now())};
+  if(autoRound&&m.r>round){round=m.r;store.set("embs-board-round",round)}
+}
+function render(){
+  $("rounds").innerHTML=Array.from({length:NROUNDS},(_,i)=>`<button type="button" data-r="${i+1}" aria-pressed="${i+1===round}">Round ${i+1}</button>`).join("");
+  $("rounds").querySelectorAll("button").forEach(b=>b.onclick=()=>{round=+b.dataset.r;autoRound=false;store.set("embs-board-round",round);render()});
+  const R=data[round]||{};
+  const list=Object.keys(teams).map(k=>R[k]?R[k]:{name:teams[k],rows:[],win:false,out:false,ts:Infinity});
+  list.sort((a,b)=>(b.win-a.win)||(a.win&&b.win?(a.rows.length-b.rows.length)||(a.ts-b.ts):0)||(a.out-b.out)||(b.rows.length-a.rows.length)||a.name.localeCompare(b.name));
+  if(!list.length){$("grid").innerHTML=`<div class="empty">Waiting for teams… <b>Scan the QR code</b> and enter your team name to show up here.</div>`;return}
+  let place=0;
+  $("grid").innerHTML=list.map(t=>{
+    if(t.win)place++;
+    const medal=t.win?(["🥇","🥈","🥉"][place-1]||""):"";
+    const cells=Array.from({length:6},(_,i)=>`<div class="mr">${Array.from({length:5},(_,j)=>`<div class="mc ${t.rows[i]?t.rows[i][j]:""}"></div>`).join("")}</div>`).join("");
+    const status=t.win?`Solved in ${t.rows.length}/6`:t.out?"Out of guesses":t.rows.length?`Guess ${t.rows.length} of 6…`:"Ready";
+    return `<div class="card ${t.win?"win":""} ${t.out?"out":""}"><div class="place"><span>${t.win?"#"+place:""}</span><span class="medal">${medal}</span></div><div class="tname">${esc(t.name)}</div><div class="mini">${cells}</div><div class="status ${t.win?"win":""}">${status}</div></div>`;
+  }).join("");
+}
+let es;
+function connect(){
+  if(es)es.close();
+  es=new EventSource(`https://ntfy.sh/${TOPIC}/sse?since=${since}`);
+  es.onopen=()=>{$("live").classList.add("on");$("liveText").textContent="Live"};
+  es.onerror=()=>{$("live").classList.remove("on");$("liveText").textContent="Reconnecting…"};
+  es.onmessage=e=>{try{const ev=JSON.parse(e.data);if(ev.event==="message"&&ev.message){ingest(JSON.parse(ev.message));render()}}catch(err){}};
+}
+$("reset").onclick=()=>{if(!confirmReset())return;since=Math.floor(Date.now()/1000);store.set("embs-board-since",since);data={};teams={};round=1;autoRound=true;store.set("embs-board-round",1);render();connect()};
+function confirmReset(){const b=$("reset");if(b.dataset.armed){delete b.dataset.armed;b.textContent="Start a new game";return true}b.dataset.armed="1";b.textContent="Click again to clear the board";setTimeout(()=>{delete b.dataset.armed;b.textContent="Start a new game"},3000);return false}
+render();connect();
+</script>
+</body>
+</html>

@@ -45,6 +45,16 @@ main{flex:1;width:100%;max-width:520px;display:flex;flex-direction:column;align-
 .present{background:var(--yellow)!important;border-color:var(--yellow)!important;color:#fff}
 .absent{background:var(--gray)!important;border-color:var(--gray)!important;color:#fff}
 .msg{min-height:24px;font-weight:700;text-align:center}
+.teambar{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted)}
+.teambar b{color:var(--navy)}
+.teambar button{font:600 12px Figtree,sans-serif;background:none;border:none;color:var(--teal);text-decoration:underline;cursor:pointer;padding:2px}
+.join{position:fixed;inset:0;background:rgba(10,14,22,.6);display:flex;align-items:center;justify-content:center;padding:16px;z-index:20}
+.join[hidden]{display:none}
+.join form{background:var(--surface);border-radius:16px;padding:22px 20px;width:100%;max-width:340px;display:flex;flex-direction:column;gap:12px;text-align:center}
+.join h2{font-family:Unbounded,sans-serif;font-size:20px;color:var(--navy)}
+.join p{font-size:14px;color:var(--muted)}
+.join input{font:600 18px Figtree,sans-serif;padding:12px;border-radius:10px;border:2px solid var(--line);background:var(--bg);color:var(--ink);text-align:center}
+.join input:focus{outline:none;border-color:var(--navy)}
 .done{display:none;flex-direction:column;align-items:center;gap:8px;text-align:center}
 .done.show{display:flex}
 .done .fact{font-size:14px;color:var(--muted);max-width:360px}
@@ -63,7 +73,9 @@ button:focus-visible{outline:2px solid var(--navy);outline-offset:2px}
   <span class="eyebrow">IEEE EMBS at UF · GBM Edition</span>
   <div class="brand"><img src="embs-logo.png" alt="IEEE EMBS logo"><h1>EMBS WORDLE</h1></div>
   <div class="rounds" id="rounds" aria-label="Choose a round"></div>
+  <div class="teambar" id="teambar" hidden>Playing as <b id="teamName"></b><button type="button" id="changeTeam">change</button></div>
 </header>
+<div class="join" id="join" hidden><form id="joinForm"><h2>Join your team</h2><p>Type your team name exactly the way your host said it. One phone per team.</p><input id="teamInput" maxlength="20" autocomplete="off" placeholder="Team name" required><button class="btn" type="submit">Let's play</button></form></div>
 <main>
   <div class="hintbar"><button class="hintbtn" id="hintBtn" type="button">Need a hint?</button><span class="hint" id="hint" hidden></span></div>
   <div class="board" id="board" aria-live="polite"></div>
@@ -144,7 +156,7 @@ function press(k){
   else if(k==="⏎"||k==="ENTER"){
     if(cur.length<5){$("row"+guesses.length).classList.remove("shake");void $("row"+guesses.length).offsetWidth;$("row"+guesses.length).classList.add("shake");$("msg").textContent="Not enough letters";setTimeout(()=>{if(!over)$("msg").textContent=""},1200);return}
     const w=ROUNDS[r].w,res=score(cur,w),row=guesses.length;
-    guesses.push(cur);store.set("embs-wordle-"+r,{guesses});
+    guesses.push(cur);store.set("embs-wordle-"+r,{guesses});report(cur,res);
     busy=true;paintRow(row,cur,res,true);const g=cur;cur="";
     setTimeout(()=>{busy=false;paintKeys();if(g===w)finish(true);else if(guesses.length>=6)finish(false)},5*220+300);
     return;
@@ -173,7 +185,21 @@ function confetti(){
   const ps=Array.from({length:120},()=>({x:Math.random()*c.width,y:-20-Math.random()*c.height*.5,vx:(Math.random()-.5)*3,vy:2+Math.random()*3,s:5+Math.random()*6,c:cols[Math.random()*cols.length|0],a:Math.random()*6}));
   let t=0;(function f(){x.clearRect(0,0,c.width,c.height);ps.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.a+=.1;x.save();x.translate(p.x,p.y);x.rotate(p.a);x.fillStyle=p.c;x.fillRect(-p.s/2,-p.s/4,p.s,p.s/2);x.restore()});if(++t<180)requestAnimationFrame(f);else c.remove()})();
 }
-buildKb();load(0);
+const TOPIC="embs-gbm-wordle-x7k4p2";
+let team=store.get("embs-wordle-team","");
+function showTeam(){if(team){$("teamName").textContent=team;$("teambar").hidden=false;$("join").hidden=true}else{$("teambar").hidden=true;$("join").hidden=false;setTimeout(()=>$("teamInput").focus(),50)}}
+$("joinForm").onsubmit=e=>{e.preventDefault();const v=$("teamInput").value.trim().replace(/\s+/g," ");if(!v)return;team=v;store.set("embs-wordle-team",team);showTeam();send({k:"join"})};
+$("changeTeam").onclick=()=>{$("teamInput").value=team;team="";showTeam()};
+function send(extra){
+  if(!team)return;
+  const body=JSON.stringify(Object.assign({t:team,r:r+1,ts:Date.now()},extra));
+  fetch("https://ntfy.sh/"+TOPIC,{method:"POST",body}).catch(()=>{});
+}
+function report(g,res){
+  const w=ROUNDS[r].w;
+  send({k:"g",n:guesses.length,rows:guesses.map(x=>score(x,w).map(c=>c[0]).join("")),win:g===w,out:g!==w&&guesses.length>=6});
+}
+buildKb();load(0);showTeam();
 </script>
 </body>
 </html>
